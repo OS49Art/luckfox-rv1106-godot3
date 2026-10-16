@@ -1,6 +1,6 @@
 # Public-curation validation — 2026-10-16
 
-These tests were actually executed locally; CI has not yet run on GitHub.
+Local results and an observed GitHub-hosted Ubuntu Linux run are recorded below.
 
 | Check | Result | Scope |
 |---|---|---|
@@ -16,7 +16,7 @@ These tests were actually executed locally; CI has not yet run on GitHub.
 | Exported PCK re-open --smoke | PASS | explicit project working directory; DEMO_SMOKE_PASS / exit0 |
 | ARM32/uClibc compile of public checkout | NOT_RUN | matching SDK not in this curation environment |
 | Neutral demo/new portable launcher on board | NOT_RUN | no hardware operations authorized for curation |
-| Native Linux supervisor/header/FD/reaper/pidfd/queued-signal tests | NOT_RUN locally | no native Linux environment; added Ubuntu CI compile/run gate, not yet observed |
+| Native Linux supervisor/header/FD/reaping/pidfd/queued-signal tests | PASS on GitHub Ubuntu | actual production-supervisor compile and native syscall tests; not ARM/board acceptance |
 | Shared lifecycle failure model, MSVC19.16 | PASS | deterministic TERM at STOP/spawn/wait boundaries, short backup/write/CONT/identity/reap failure; not native POSIX |
 
 Editor available locally was official3.6.3 **Mono**, used only for GDScript
@@ -59,7 +59,7 @@ only the dependency-free state model, **not** Linux/POSIX compilation.
 Ubuntu CI now compiles production supervisor, runs shared lifecycle mock and
 native FD-sentinel/exec/reaper/pidfd/queued TERM/restore/device-failure tests, scans
 full fetched repository history, verifies manifest and pinned installer replay.
-CI result remains NOT_RUN until an actual GitHub run is collected.
+Observed GitHub run [38842940954](https://github.com/OS49Art/luckfox-rv1106-godot3/actions/runs/38842940954) completed successfully for commit 3b6e480d8e0ab1ca36e8a63a3c1f750c52644bd8 on 2026-10-16. All steps passed: privacy/history/image gates, 42 manifest hashes, shell syntax, mapping, production Linux supervisor compile, lifecycle model, native POSIX tests and pinned installer replay. The job completed in 20 seconds. Runner/action deprecation notices were informational, not test failures. These are actual Linux host results, not ARM ABI, board, optical or manual-touch acceptance.
 
 ## Original figure integration
 
