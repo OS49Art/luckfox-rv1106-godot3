@@ -70,3 +70,32 @@ is plaintext and audited. Relative README/caption image/source links are checked
 No generator, private guidance/brief, QA JSON, logs, HTML or alternate render
 artifacts are distributed. Figures describe new experimental pidfd supervision
 and four-file matched recovery; no fresh board/native-CI acceptance is inferred.
+
+## Documentation screenshot integration — 2026-10-16
+
+[Gallery](SCREENSHOTS.md): three metadata-only sanitized historical actual RV
+framebuffer PNGs (2026-10-15), seven newly captured Godot3.6.3/GDScript GLES2
+viewport PNGs (360 source plus six desktop offscreen target sizes). Actual capture
+process exit0 and GALLERY_CAPTURE_PASS; each engine target had expected dimensions.
+All six targets matched independent same-state nearest sampling at every content
+pixel; all retained bars were black. A fresh capture run removed redundant
+Image.flip_y calls with render_target_v_flip=true; the invariant top header
+matches the independent upright historical RV header at every compared pixel
+for the 360 source and all six targets. Top-header/bottom-action geometry was
+also asserted independently of the scaling source. Rejected inverted captures
+remain private only; new raw/public visible hashes replace their old values.
+768×1024 has fractional 32/15 scale, not
+uniform integer pixels. Native hidden windows were measured separately: tall
+requests clamp to height1203; they are not the published full-size target captures.
+No mobile, optical, board, new neutral-demo or supervisor acceptance is inferred.
+
+Python repository gates now PASS9 (the existing eight plus screenshot scope),
+including exact ten-file screenshot allowlist/dimensions, PNG CRC/chunk/bounded
+pixel validation, metadata and corrupt/decompression negative controls, relative
+links and unchanged index/history/all-blob privacy scans. Metadata removal kept
+all original visible RGBA pixel hashes; only IHDR/IDAT/IEND remain. The maintained
+prototype source tree hashes before/after the controlled capture run matched.
+Private helpers/logs/art/font sources and packs remain outside this public tree.
+[Artwork scope](../LICENSES/SCREENSHOTS.md) excludes depicted material from any
+implied MIT asset reuse grant. This documentation-only addition does not change
+runtime, launcher, backend, supervisor, neutral demo or CI workflow code.

@@ -4,6 +4,17 @@ ALLOWED = set('''
 .gitattributes .gitignore .github/workflows/host-tests.yml LICENSE LICENSES/Godot-MIT.txt
 README.md README.zh-CN.md SOURCE_MANIFEST.sha256
 demo/export_presets.cfg demo/main.gd demo/main.tscn demo/project.godot
+docs/SCREENSHOTS.md LICENSES/SCREENSHOTS.md
+docs/images/screenshots/desktop-core-1080x1920.png
+docs/images/screenshots/desktop-core-1080x2400.png
+docs/images/screenshots/desktop-core-1440x3200.png
+docs/images/screenshots/desktop-core-360.png
+docs/images/screenshots/desktop-core-720x1280.png
+docs/images/screenshots/desktop-core-720x720.png
+docs/images/screenshots/desktop-core-768x1024.png
+docs/images/screenshots/rv-fixed-attributes.png
+docs/images/screenshots/rv-fixed-core.png
+docs/images/screenshots/rv-fixed-popup.png
 docs/FIGURES.md docs/images/architecture.svg docs/images/architecture.png
 docs/images/deployment.svg docs/images/deployment.png
 docs/ARCHITECTURE.md docs/DEVICE.md docs/EVIDENCE.md docs/PROVENANCE.md docs/VALIDATION.md
@@ -28,10 +39,23 @@ def filename_ok(name):
             not any(p.lower() in FORBIDDEN_TREES for p in path.parts))
 
 PNG_PATHS = {'docs/images/architecture.png','docs/images/deployment.png'}
+SCREENSHOT_DIMENSIONS = {
+    'docs/images/screenshots/desktop-core-1080x1920.png': (1080, 1920),
+    'docs/images/screenshots/desktop-core-1080x2400.png': (1080, 2400),
+    'docs/images/screenshots/desktop-core-1440x3200.png': (1440, 3200),
+    'docs/images/screenshots/desktop-core-360.png': (360, 360),
+    'docs/images/screenshots/desktop-core-720x1280.png': (720, 1280),
+    'docs/images/screenshots/desktop-core-720x720.png': (720, 720),
+    'docs/images/screenshots/desktop-core-768x1024.png': (768, 1024),
+    'docs/images/screenshots/rv-fixed-attributes.png': (720, 720),
+    'docs/images/screenshots/rv-fixed-core.png': (720, 720),
+    'docs/images/screenshots/rv-fixed-popup.png': (720, 720),
+}
+PNG_PATHS |= set(SCREENSHOT_DIMENSIONS)
 SVG_PATHS = {'docs/images/architecture.svg','docs/images/deployment.svg'}
 PNG_SIGNATURE = bytes((137,80,78,71,13,10,26,10))
-def audit_png(data):
-    """Only original approved raster diagram exports: no text/EXIF/unknown chunks."""
+def audit_png(data, name=None):
+    """Approved diagrams/screenshots only: bounded pixels, no text/EXIF/unknown chunks."""
     import struct
     import zlib
     if not data.startswith(PNG_SIGNATURE):raise ValueError('Not PNG')
@@ -44,6 +68,7 @@ def audit_png(data):
         if offset+12>len(data):raise ValueError('Truncated PNG')
         length=struct.unpack('>I',data[offset:offset+4])[0]
         kind=data[offset+4:offset+8]
+        if name in SCREENSHOT_DIMENSIONS and kind not in (b'IHDR',b'IDAT',b'IEND'):raise ValueError('Screenshot metadata')
         end=offset+12+length
         if length>64*1024*1024 or end>len(data) or kind not in allowed:raise ValueError('Unapproved PNG metadata/chunk')
         payload=data[offset+8:offset+8+length]
@@ -68,6 +93,7 @@ def audit_png(data):
         offset=end
     if not dimensions or not seen or seen[-1]!=b'IEND':raise ValueError('Incomplete PNG')
     width,height,channels=dimensions
+    if name in SCREENSHOT_DIMENSIONS and (width,height)!=SCREENSHOT_DIMENSIONS[name]:raise ValueError('Screenshot dimensions')
     expected=height*(1+width*channels)
     decoder=zlib.decompressobj()
     raw=decoder.decompress(b''.join(compressed),expected+1)

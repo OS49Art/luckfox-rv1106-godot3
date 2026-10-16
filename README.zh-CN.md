@@ -38,3 +38,13 @@ evdev grab，子进程退出后由异步waitpid轮询重新打开/抓取，SIGST
 [完整图注、可编辑SVG与原创许可](docs/FIGURES.md)。图示为**新公开实验接入设计**；
 公开pidfd supervisor、输入释放/重新抓取hooks及新失败退出行为尚未板端验收，
 历史P6原入口成功不等于本接入已通过真机验证。
+
+## 实际界面截图
+
+![Historical RV framebuffer character prototype](docs/images/screenshots/rv-fixed-core.png)
+
+2026-10-15 RV1106 实际 framebuffer 读回（不是 LCD 实拍），展示独立角色原型，
+不是本仓库中性 demo，也不证明新 supervisor 已板端验收。
+
+[全部截图、Godot3 六种分辨率效果与局限](docs/SCREENSHOTS.md)。
+仅供文档展示，[代码 MIT 不授予画面素材复用许可](LICENSES/SCREENSHOTS.md)。

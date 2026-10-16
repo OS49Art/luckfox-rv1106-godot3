@@ -2,7 +2,9 @@
 
 Historical source evidence was reviewed on2026-10-16. These are sanitized prior
 observations from the maintained private360 production application, **not this
-new neutral demo's board acceptance**, and no raw private logs/art are published.
+new neutral demo's board acceptance**, and no raw private logs/art sources are published. Documentation-only rendered
+screenshots are now available in the [gallery](SCREENSHOTS.md), with separate
+capture dates, methods, limits and artwork scope.
 
 - P6 production fix removed only desktop test_width/test_height720; original
   runtime/launcher unchanged.8 slots/3tabs/input boundaries checked through

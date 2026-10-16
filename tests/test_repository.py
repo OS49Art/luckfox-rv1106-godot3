@@ -4,7 +4,7 @@ import ast
 import re
 import subprocess
 import unittest
-from publication_policy import ALLOWED, PRIVATE_IP, content_ok, filename_ok, PNG_PATHS, SVG_PATHS, PNG_SIGNATURE, audit_png, audit_svg, mode_ok
+from publication_policy import ALLOWED, PRIVATE_IP, content_ok, filename_ok, PNG_PATHS, SVG_PATHS, PNG_SIGNATURE, audit_png, audit_svg, mode_ok, SCREENSHOT_DIMENSIONS
 ROOT = Path(__file__).resolve().parents[1]
 class Repository(unittest.TestCase):
     def test_window(self):
@@ -33,7 +33,7 @@ class Repository(unittest.TestCase):
         self.assertTrue(all(ord(c)>=32 or c in '\n\r\t' for c in text),name)
     def inspect_artifact(self,data,name):
         if name in PNG_PATHS:
-            audit_png(data)
+            audit_png(data,name)
         else:
             self.inspect_text(data,name)
             if name in SVG_PATHS:audit_svg(data)
@@ -109,6 +109,19 @@ class Repository(unittest.TestCase):
                 resolved=(path.parent/local).resolve()
                 self.assertTrue(ROOT==resolved or ROOT in resolved.parents,str(path)+':'+target)
                 self.assertTrue(resolved.is_file(),str(path)+':'+target)
+    def test_screenshot_scope(self):
+        self.assertEqual(len(SCREENSHOT_DIMENSIONS),10)
+        for name, dimensions in SCREENSHOT_DIMENSIONS.items():
+            self.assertTrue(filename_ok(name))
+            self.assertEqual(audit_png((ROOT/name).read_bytes(),name),dimensions)
+        self.assertFalse(filename_ok('docs/images/screenshots/unreviewed.png'))
+        scope=(ROOT/'LICENSES/SCREENSHOTS.md').read_text(encoding='utf-8')
+        self.assertIn('does not relicense',scope)
+        gallery=(ROOT/'docs/SCREENSHOTS.md').read_text(encoding='utf-8')
+        for name in SCREENSHOT_DIMENSIONS:self.assertIn(Path(name).name,gallery)
+        self.assertIn('not Android',gallery)
+        self.assertIn('2026-10-15',gallery)
+        self.assertIn('2026-10-16',gallery)
     def test_image_audit_negative_controls(self):
         import struct
         import zlib
@@ -119,8 +132,9 @@ class Repository(unittest.TestCase):
         end=chunk(b'IEND',b'')
         png=PNG_SIGNATURE+header+pixels+end
         self.assertEqual(audit_png(png),(1,1))
-        for bad in (png+b'trailing',png[:-1],PNG_SIGNATURE+header+chunk(b'tEXt',b'private metadata')+pixels+end):
+        for bad in (png+b'trailing',png[:-1],png[:40]+bytes((png[40]^1,))+png[41:],PNG_SIGNATURE+header+chunk(b'tEXt',b'private metadata')+pixels+end,PNG_SIGNATURE+header+chunk(b'IDAT',zlib.compress(bytes(1000000)))+end):
             with self.assertRaises(ValueError):audit_png(bad)
+        with self.assertRaises(ValueError):audit_png(png,'docs/images/screenshots/rv-fixed-core.png')
         svg=b'<svg xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1"/></svg>'
         self.assertTrue(audit_svg(svg))
         for element in ('<script/>','<image href="https://example.invalid/p.png"/>','<g onclick="run()"/>','<rect fill="url(https://example.invalid/f)"/>'):

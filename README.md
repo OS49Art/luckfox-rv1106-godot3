@@ -84,3 +84,13 @@ CI checks mapping, repository constraints and installers against pinned upstream
 ## License
 
 Original port/scripts/demo MIT; upstream Godot notices retained in [LICENSES/Godot-MIT.txt](LICENSES/Godot-MIT.txt). Preserve upstream COPYRIGHT.txt and third-party notices when distributing built runtimes. Not an official Godot/Luckfox port.
+
+## Actual UI screenshots
+
+![Historical RV framebuffer character prototype](docs/images/screenshots/rv-fixed-core.png)
+
+Historical RV1106 framebuffer readback (2026-10-15), separate character prototype;
+not an LCD photo, not this neutral demo or new supervisor acceptance.
+
+[Gallery, six desktop resolution targets and limitations](docs/SCREENSHOTS.md).
+Documentation display only; [MIT does not relicense depicted artwork](LICENSES/SCREENSHOTS.md).
