@@ -1,0 +1,13 @@
+config_version=4
+[application]
+config/name="CPU Canvas neutral panel"
+run/main_scene="res://main.tscn"
+[display]
+window/size/width=360
+window/size/height=360
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
+[rendering]
+quality/driver/driver_name="GLES2"
+quality/2d/use_pixel_snap=true
+environment/default_clear_color=Color(0.07,0.1,0.16,1)

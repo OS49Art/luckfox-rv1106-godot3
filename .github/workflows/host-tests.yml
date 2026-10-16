@@ -1,0 +1,25 @@
+name: Host tests (no hardware claims)
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  offline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 -B tests/test_repository.py
+      - run: sha256sum -c SOURCE_MANIFEST.sha256
+      - run: for f in scripts/*.sh; do sh -n "$f"; done
+      - run: c++ -std=c++11 -Iport/godot3 port/godot3/test_viewport_mapping.cpp -o /tmp/mapping-test && /tmp/mapping-test
+      - name: Compile production Linux supervisor
+        run: c++ -std=c++11 -O2 -Wall -Wextra port/desktop_supervisor.cpp -o /tmp/desktop-supervisor
+      - name: Deterministic lifecycle transition and recovery mocks
+        run: c++ -std=c++11 -Iport tests/test_lifecycle.cpp -o /tmp/lifecycle-test && /tmp/lifecycle-test
+      - name: Native Linux descriptors, async reaping, pidfd, queued TERM and failures
+        run: c++ -std=c++11 -O2 -Wall -Wextra -Iport tests/test_posix.cpp -o /tmp/posix-test && timeout 30 /tmp/posix-test
+      - name: Replay pinned source installers
+        run: |
+          git clone --depth 1 --branch 3.6.3-stable https://github.com/godotengine/godot.git "$RUNNER_TEMP/godot3"
+          python3 -B tests/test_install.py "$RUNNER_TEMP/godot3"

@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.import/
+.mono/
+.godot/
+out/
+*.pck
+*.log
+*.arm
+*.exe
+.env
+*.pem
+
+# Defense-in-depth; publication also enforces exact source allowlist.
+*.pt
+*.pth
+*.onnx
+*.rknn
+*.tflite
+*.safetensors
+*.ckpt
+*.bin
+models/
+weights/
+datasets/
+training/
+checkpoints/
